@@ -5,6 +5,7 @@ from rest_framework.decorators import api_view
 from .serializers import StudentUserSerializer
 from .models import StudentUser
 from rest_framework.views import APIView
+import requests
 
 # Create your views here.
 
@@ -45,12 +46,34 @@ class StudentDetail(APIView):
         try:
             return StudentUser.objects.get(registration_number=registration_number)
         except StudentUser.DoesNotExist:
-            raise JsonResponse("Student does not exist")
+            raise JsonResponse("Student does not exist", safe=False)
 
     def get(self, request, registration_number):
-        student = self.get_object(registration_number)
-        serializer = StudentUserSerializer(student, many=False)
-        return Response(serializer.data)
+        try:
+            student = StudentUser.objects.get(registration_number=registration_number)
+            serializer = StudentUserSerializer(student, many=False)
+
+            try:
+                result = requests.get(f"http://127.0.0.1:8000/api/student-result/{registration_number}").json()
+                
+            except:
+                result = ""
+                
+
+            try:
+                notice = requests.get(f"http://127.0.0.1:8004/api/notice/student/").json()
+            except:
+                notice = ""
+
+            context = {
+                "Student Profile":serializer.data,
+                "Student Result": result,
+                "Notice": notice,
+                
+            }
+            return Response(context)
+        except:
+            return JsonResponse("Student Not found", safe=False)
     
     def put (self, request, registration_number):
         student= self.get_object(registration_number)
