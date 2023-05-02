@@ -54,14 +54,14 @@ class StudentDetail(APIView):
             serializer = StudentUserSerializer(student, many=False)
 
             try:
-                result = requests.get(f"http://127.0.0.1:8000/api/student-result/{registration_number}").json()
+                result = requests.get(f"http://127.0.0.1:8003/api/student-result/{registration_number}").json()
                 
             except:
                 result = ""
                 
 
             try:
-                notice = requests.get(f"http://127.0.0.1:8004/api/notice/student/").json()
+                notice = requests.get(f"http://127.0.0.1:8002/api/notice/student/").json()
             except:
                 notice = ""
 
