@@ -16,16 +16,26 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path,include
-from rest_framework.routers import DefaultRouter
-from api.views import TeacherViewSet
+from drf_yasg.views import get_schema_view
+from drf_yasg import openapi
+schema_view = get_schema_view(
+    openapi.Info(
+        title = "Teacher Microservice",
+        default_version='v1',
+        description="Microservice detailing the functionality of Teacher API",
+        contact=openapi.Contact(email="chidiebereorjiibiam7@gmail.com"),
+        license=openapi.License(name="MIT License"),
+    ),
+    public=True
+)
 
-router = DefaultRouter()
-router.register(r'teacher', TeacherViewSet, basename='Teacher')
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include("api.urls")),
+    path('', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
+    path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='scheme-redoc'),
 
 ]
 
-urlpatterns += router.urls
