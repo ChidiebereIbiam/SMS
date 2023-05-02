@@ -24,7 +24,7 @@ router.register(r'teacher', TeacherViewSet, basename='Teacher')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/teacher/', include("api.urls")),
+    path('api/', include("api.urls")),
 
 ]
 
